@@ -2,9 +2,23 @@
 @use 'sass:map';
 
 @function get-color($type, $level) {
-  // add the logic here
-  // use if else to check if the type and level are valid
-  // if they are valid, return the color
-  // if they are not valid warn 'Invalid color type or level' and return null
-  // null is a special value in Sass that means nothing, and it is used to represent the absence of a value, you need to return null if the type or level is not valid
+  // Check if the type exists in the $colors map
+  @if map.has-key($colors, $type) {
+    // Get the map for the given type
+    $type-map: map.get($colors, $type);
+
+    // Check if the level exists within the type map
+    @if map.has-key($type-map, $level) {
+      // Return the corresponding color value
+      @return map.get($type-map, $level);
+    } @else {
+      // Warn and return null if the level is invalid
+      @warn "Invalid level `#{$level}` for color type `#{$type}`.";
+      @return null;
+    }
+  } @else {
+    // Warn and return null if the type is invalid
+    @warn "Invalid color type `#{$type}`.";
+    @return null;
+  }
 }
